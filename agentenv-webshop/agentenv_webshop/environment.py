@@ -94,7 +94,13 @@ class WebshopEnvServer:
 
     def reset(self, env_idx, session_id: Optional[int]):
         return self.env[env_idx].reset(session=session_id)
-    
+
+    def close(self, env_idx):
+        self.env[env_idx].close()
+        print(f"-------Env {env_idx} closed--------")
+        del self.env[env_idx]
+        return True
+
     def __del__(self):
         for idx in self.ls:
             self.env[idx].close

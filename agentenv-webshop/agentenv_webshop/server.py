@@ -16,7 +16,6 @@ app = FastAPI(debug=debug_flg)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
 
-# 自定义中间件
 @app.middleware("http")
 async def log_request_response_time(request: Request, call_next):
     start_time = time.time()
@@ -101,3 +100,7 @@ def get_state(env_idx: int):
 def reset(reset_query: ResetQuery):
     print(reset_query)
     return webshop_env_server.reset(reset_query.env_idx, reset_query.session_id)
+
+@app.post("/close")
+def close(body: CloseRequestBody):
+    return webshop_env_server.close(body.env_idx)
