@@ -86,10 +86,27 @@ class ALFWorld_Wrapper:
             payload = {"error": f"{e}"}
         return payload
     
+    
     def __del__(self):
         for idx in self.ls:
             self.env_init[idx].close()
             print(f"-------Env {idx} closed--------")
+
+    def close(self, idx):
+        try:
+            self._check_id(idx)
+            if idx in self.env_init:
+                self.env_init[idx].close()
+                del self.env_init[idx]
+            if idx in self.env:
+                del self.env[idx]
+            self.info[idx]["deleted"] = True
+            print(f"-------Env {idx} closed--------")
+            payload = {"id": idx, "status": "closed"}
+        except Exception as e:
+            payload = {"error": f"{e}"}
+        return payload
+
 
     def step(self, idx: int, action: str):
         try:

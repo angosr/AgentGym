@@ -12,7 +12,7 @@ cd ..
 
 wget -c https://bird-bench.oss-cn-beijing.aliyuncs.com/dev.zip
 unzip dev.zip
-mv dev_2024062 dev
+mv dev_20240627 dev
 unzip dev_databases.zip
 cd ..
 
