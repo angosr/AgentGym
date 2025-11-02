@@ -19,6 +19,7 @@ class APIAgent:
         temperature: float = 1,
         top_p: float = 1,
         timeout: float = 300.0,
+        seed: Optional[int] = None,
     ) -> None:
         """
         Initialize the API agent with configuration parameters.
@@ -31,6 +32,7 @@ class APIAgent:
             temperature: Temperature parameter for generation
             top_p: Top-p parameter for generation
             timeout: Request timeout in seconds
+            seed: Random seed for reproducible generation
         """
         self.api_key = api_key
         self.base_url = base_url.rstrip('/')  # Remove trailing slash if present
@@ -39,6 +41,7 @@ class APIAgent:
         self.temperature = temperature
         self.top_p = top_p
         self.timeout = timeout
+        self.seed = seed
         
         self.client = httpx.Client(
             headers={
@@ -75,6 +78,9 @@ class APIAgent:
 
         if self.max_tokens and self.max_tokens > 0:
             payload["max_tokens"] = self.max_tokens
+
+        if self.seed is not None:
+            payload["seed"] = self.seed
 
         return payload
 
