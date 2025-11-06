@@ -32,3 +32,7 @@ class ResetQuery(BaseModel):
 
 class CloseRequestBody(BaseModel):
     env_idx: int
+
+
+class CreateQuery(BaseModel):
+    seed: Optional[int] = None

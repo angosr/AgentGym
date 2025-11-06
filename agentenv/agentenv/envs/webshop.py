@@ -151,12 +151,13 @@ class WebshopEnvClient(BaseEnvClient):
     adapter_cls = WebshopAdapter
 
     def __init__(
-        self, env_server_base: str, data_len: int, *args, timeout: int = 300, **kwargs
+        self, env_server_base: str, data_len: int, *args, timeout: int = 300, seed: int = None, **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.env_server_base = env_server_base
         self.timeout = timeout
         self.data_len = data_len
+        self.seed = seed
         self.info = {}
         self.env_ids = {}
         self.conversation_start = self.adapter_cls.conversation_start_dict[
@@ -164,8 +165,13 @@ class WebshopEnvClient(BaseEnvClient):
         ]
     
     def create(self) -> str:
+        data = {}
+        if self.seed is not None:
+            data["seed"] = self.seed
+        
         ok = requests.post(
             f"{self.env_server_base}/create",
+            json=data,
             timeout=self.timeout,
         )
         if ok.status_code != 200:

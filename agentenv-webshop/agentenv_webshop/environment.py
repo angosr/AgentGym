@@ -20,14 +20,18 @@ class WebshopEnvServer:
         self.sz = 8000
         self.now = -1
 
-    def create(self) -> int:
-        env_idx = self._max_id
+    def create(self, seed: Optional[int] = None) -> int:
         import random
-        import time
 
-        random.seed(time.time())
-        idx = random.randint(0, 48950076)
-        print(f"-------Env {idx} created--------")
+        if seed is not None:
+            random.seed(seed)
+        else:
+            import time
+            random.seed(time.time())
+        
+        idx = self._max_id
+        print(f"-------Env {idx} created with seed={seed}--------")
+        
         if len(self.env) == self.sz:
             self.now = self.now + 1
             if self.now == self.sz:

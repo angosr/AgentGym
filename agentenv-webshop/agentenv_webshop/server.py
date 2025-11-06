@@ -40,9 +40,12 @@ async def list_envs():
 
 
 @app.post("/create", response_model=int)
-async def create():
+async def create(create_query: CreateQuery = None):
     """Create a new environment"""
-    env = webshop_env_server.create()
+    seed = None
+    if create_query is not None:
+        seed = create_query.seed
+    env = webshop_env_server.create(seed=seed)
 
     return env
 
