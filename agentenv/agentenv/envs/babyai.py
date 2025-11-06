@@ -26,14 +26,15 @@ class BabyAIEnvClient(BaseEnvClient):
     )
 
     def __init__(
-        self, env_server_base: str, data_len: int, *args, timeout: int = 300, **kwargs
+        self, env_server_base: str, data_len: int, *args, timeout: int = 300, seed: int = None, **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.env_server_base = env_server_base
         self.timeout = timeout
         self.data_len = data_len
+        self.seed = seed
         self.info = {}
-        self.env_ids = {} 
+        self.env_ids = {}
 
     def create(self) -> str:
         ok = requests.post(f"{self.env_server_base}/create", timeout=self.timeout)
@@ -105,7 +106,10 @@ class BabyAIEnvClient(BaseEnvClient):
         )
 
     def reset(self, env_idx: str, data_idx: int = 0) -> Dict[str, Any]:
-        response = self._post("reset", {"data_idx": data_idx}, env_idx=env_idx)
+        data = {"data_idx": data_idx}
+        if self.seed is not None:
+            data["seed"] = self.seed
+        response = self._post("reset", data, env_idx=env_idx)
         
         if env_idx not in self.info:
             self.info[env_idx] = {}
