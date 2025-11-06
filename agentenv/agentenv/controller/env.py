@@ -7,7 +7,7 @@ from typing import Dict, Tuple
 class BaseEnvClient(metaclass=ABCMeta):
     _conversation_start: Dict[ActionFormat, Tuple[ConversationMessage]]
 
-    def __init__(self, action_format: ActionFormat = "react") -> None:
+    def __init__(self, action_format: ActionFormat = "react", **kwargs) -> None:
         self.action_format = ActionFormat(action_format)
 
     @abstractmethod
