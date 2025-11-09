@@ -175,6 +175,14 @@ Now let's start a new game. Return your action and your thought in the format ab
 
     def step(self, env_idx: str, action: str) -> StepOutput:
         print(action)
+        # Handle None action
+        if action is None:
+            return StepOutput(
+                state="Error: Action is None. Please provide a valid action.\n\n" + self.observe(env_idx),
+                reward=0.0,
+                done=False
+            )
+        
         if action.endswith("</s>"):
             action = action[:-5]
         _action = action.split("Action:")
@@ -373,6 +381,14 @@ Now let's start a new game. Remember, the word you guess should be strictly in t
 
     def step(self, env_idx: str, action: str) -> StepOutput:
         print(action)
+        # Handle None action
+        if action is None:
+            return StepOutput(
+                state="Error: Action is None. Please provide a valid action.\n\n" + self.observe(env_idx),
+                reward=0.0,
+                done=False
+            )
+        
         if action.endswith("</s>"):
             action = action[:-5]
         _action = action.split("Action:")

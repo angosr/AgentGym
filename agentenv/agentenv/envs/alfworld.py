@@ -581,6 +581,14 @@ class AlfWorldEnvClient(BaseEnvClient):
         return ""
 
     def step(self, env_idx: str, action: str) -> StepOutput:
+        # Handle None action
+        if action is None:
+            return StepOutput(
+                state="Error: Action is None. Please provide a valid action.\n\n" + self.observe(env_idx),
+                reward=0.0,
+                done=False
+            )
+        
         if action.endswith("</s>"):
             action = action[:-5]
         try:

@@ -230,6 +230,15 @@ class WebshopEnvClient(BaseEnvClient):
         return response
 
     def step(self, env_idx: str, action: str) -> StepOutput:
+        # Handle None action
+        if action is None:
+            obs = self.observe(env_idx)
+            return StepOutput(
+                state="Error: Action is None. Please provide a valid action.\n\n" + str(obs),
+                reward=0.0,
+                done=False
+            )
+        
         if action.endswith("</s>"):
             action = action[:-5]
         try:
