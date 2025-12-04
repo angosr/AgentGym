@@ -180,8 +180,8 @@ class TextCraftEnv(gym.Env[str, str]):
             if distractor.recipe_str not in recipes_set:
                 distractor_set.add(distractor.recipe_str)
 
-        # Sort distractor_set to ensure deterministic ordering before sampling
-        recipes_list = list(recipes_set) + random.sample(
+        # Sort both sets to ensure deterministic ordering before sampling
+        recipes_list = sorted(list(recipes_set)) + random.sample(
             sorted(list(distractor_set)), min(len(distractor_set), max_distractor)
         )
         random.shuffle(recipes_list)
