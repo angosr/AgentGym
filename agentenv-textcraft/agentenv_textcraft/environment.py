@@ -162,7 +162,8 @@ class TextCraftEnv(gym.Env[str, str]):
                 ),
                 {},
             )
-        random.seed(seed)
+        # Use data_idx as random seed to ensure same data_idx produces same task
+        random.seed(data_idx)
         item_depth_list = list(self.crafting_tree.item_recipes_min_depth(1))
         # use idx to deterministically select goal
         sorted_item_depth_list = sorted(item_depth_list, key=lambda x: x[1])
@@ -179,8 +180,9 @@ class TextCraftEnv(gym.Env[str, str]):
             if distractor.recipe_str not in recipes_set:
                 distractor_set.add(distractor.recipe_str)
 
+        # Sort distractor_set to ensure deterministic ordering before sampling
         recipes_list = list(recipes_set) + random.sample(
-            list(distractor_set), min(len(distractor_set), max_distractor)
+            sorted(list(distractor_set)), min(len(distractor_set), max_distractor)
         )
         random.shuffle(recipes_list)
         self.commands = "\n".join(recipes_list)
