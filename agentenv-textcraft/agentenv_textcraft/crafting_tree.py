@@ -346,10 +346,12 @@ class CraftingTree:
                 input_item_name = item.item_tag.name
                 if input_item_name in item_uses:
                     input_item_uses_recipes = item_uses[input_item_name]
+                    # Sort recipes by recipe_str to ensure deterministic ordering before sampling
+                    sorted_recipes = sorted(input_item_uses_recipes, key=lambda r: r.recipe_str)
                     distractors.extend(
                         random.sample(
-                            input_item_uses_recipes,
-                            min(len(input_item_uses_recipes), 10),
+                            sorted_recipes,
+                            min(len(sorted_recipes), 10),
                         )
                     )
 
