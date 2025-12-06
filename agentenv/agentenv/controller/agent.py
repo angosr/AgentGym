@@ -136,6 +136,7 @@ class APIAgent:
         endpoint = f"{self.base_url}/chat/completions"
         
         # Retry logic for resilience
+        last_error = None
         for attempt in range(max_retries):
             try:
                 # Make the API request
@@ -152,6 +153,7 @@ class APIAgent:
                 return self._parse_response(response_data)
                 
             except httpx.HTTPStatusError as e:
+                last_error = e
                 logger.error(f"HTTP error on attempt {attempt + 1}: {e}")
                 if e.response.status_code == 429:  # Rate limit
                     # Exponential backoff for rate limits
@@ -164,16 +166,18 @@ class APIAgent:
                     time.sleep(retry_delay)
                     
             except httpx.RequestError as e:
+                last_error = e
                 logger.error(f"Request error on attempt {attempt + 1}: {e}")
                 if attempt == max_retries - 1:
                     raise
                 time.sleep(retry_delay)
                 
             except Exception as e:
+                last_error = e
                 logger.error(f"Unexpected error on attempt {attempt + 1}: {e}")
                 if attempt == max_retries - 1:
                     raise
                 time.sleep(retry_delay)
         
         # This should never be reached due to the raise in the loop
-        raise RuntimeError(f"Failed after {max_retries} attempts")
+        raise RuntimeError(f"Failed after {max_retries} attempts. Last error: {last_error}")
