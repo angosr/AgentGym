@@ -150,9 +150,9 @@ class BabyAI(gym.Env):
         else:
             self.reward = reward
             
-        if self.done: # in case the model find a way to skip a step
-            if self.reward <= 0.5:
-                self.done = False
+        # if self.done: # in case the model find a way to skip a step
+        #     if self.reward <= 0.5:
+        #         self.done = False
             
         if self.reward == 1 and not self.done:    # if the agent has already reached the goal, but the task is not completed, we fix the error.
             self.done = True
